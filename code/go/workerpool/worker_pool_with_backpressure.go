@@ -12,59 +12,69 @@ type Job struct {
 	Payload string
 }
 
-// processJob simulates business logic execution.
-func processJob(workerID int, job Job) {
+// WorkerPool manages a set of workers processing jobs from a channel.
+type WorkerPool struct {
+	workerCount int
+	jobs        chan Job
+	wg          sync.WaitGroup
+}
+
+// NewWorkerPool creates and starts a worker pool.
+func NewWorkerPool(workerCount int, queueCapacity int) *WorkerPool {
+	wp := &WorkerPool{
+		workerCount: workerCount,
+		jobs:        make(chan Job, queueCapacity),
+	}
+
+	wp.start()
+	return wp
+}
+
+func (wp *WorkerPool) start() {
+	for i := 1; i <= wp.workerCount; i++ {
+		wp.wg.Add(1)
+		go func(workerID int) {
+			defer wp.wg.Done()
+			for job := range wp.jobs {
+				wp.processJob(workerID, job)
+			}
+		}(i)
+	}
+}
+
+// Submit adds a job to the pool. It blocks if the queue is full (backpressure).
+func (wp *WorkerPool) Submit(job Job) {
+	wp.jobs <- job
+}
+
+// Shutdown closes the job channel and waits for all workers to finish.
+func (wp *WorkerPool) Shutdown() {
+	close(wp.jobs)
+	wp.wg.Wait()
+}
+
+func (wp *WorkerPool) processJob(workerID int, job Job) {
 	// Print who is handling the job (educational visibility).
 	fmt.Printf("worker=%d processing job=%d payload=%s\n", workerID, job.ID, job.Payload)
 
 	// Simulate variable work cost.
-	time.Sleep(120 * time.Millisecond)
+	time.Sleep(50 * time.Millisecond)
 }
 
 func main() {
-	// Configuration values kept explicit for learning purposes.
 	const workerCount = 3
 	const queueCapacity = 5
 	const totalJobs = 12
 
-	// Buffered channel acts as an in-memory queue.
-	// Bounded capacity demonstrates simple backpressure.
-	jobs := make(chan Job, queueCapacity)
-
-	// WaitGroup lets main wait for all worker goroutines to stop cleanly.
-	var wg sync.WaitGroup
-
-	// Start worker goroutines.
-	for workerID := 1; workerID <= workerCount; workerID++ {
-		wg.Add(1)
-
-		go func(id int) {
-			defer wg.Done()
-
-			// Range loop exits automatically when channel is closed.
-			for job := range jobs {
-				processJob(id, job)
-			}
-
-			fmt.Printf("worker=%d stopped\n", id)
-		}(workerID)
-	}
+	pool := NewWorkerPool(workerCount, queueCapacity)
 
 	// Producer loop: enqueue jobs.
 	for i := 1; i <= totalJobs; i++ {
 		job := Job{ID: i, Payload: fmt.Sprintf("task-%02d", i)}
-
-		// If the queue is full, send blocks until workers consume items.
-		// This is the simplest form of backpressure.
-		jobs <- job
-		fmt.Printf("enqueued job=%d queue_len=%d\n", job.ID, len(jobs))
+		pool.Submit(job)
+		fmt.Printf("enqueued job=%d\n", job.ID)
 	}
 
-	// No more jobs: close channel so workers can finish.
-	close(jobs)
-
-	// Wait for all workers to complete.
-	wg.Wait()
-
+	pool.Shutdown()
 	fmt.Println("all jobs processed")
 }

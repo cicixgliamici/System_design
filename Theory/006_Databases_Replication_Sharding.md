@@ -273,6 +273,28 @@ This is operationally difficult because:
 
 This is why bad shard-key choices are costly.
 
+### Solving rebalancing with Consistent Hashing
+
+To avoid moving all data when adding a new shard, we use a hash ring.
+
+```mermaid
+graph TD
+    subgraph "Hash Ring Concept"
+        Ring((Hash Ring))
+        Ring -.-> N1[Node A]
+        Ring -.-> N2[Node B]
+        Ring -.-> N3[Node C]
+        
+        K1[Key 1] -- "Hash(K1)" --> Ring
+        K1 --> N1
+        
+        K2[Key 2] -- "Hash(K2)" --> Ring
+        K2 --> N2
+    end
+```
+
+**Main advantage:** When adding Node D, only keys that would hash to Node D's position are moved (approx. `1/n` of the data), rather than `(n-1)/n` as with a naive `hash(key) % n` approach.
+
 ---
 
 ## 12) Cross-shard queries and transactions

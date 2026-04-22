@@ -25,7 +25,7 @@ interface CounterState {
   windowStartMs: number;
 }
 
-class FixedWindowRateLimiter {
+export class FixedWindowRateLimiter {
   private readonly limit: number;
   private readonly windowMs: number;
   private readonly counters: Map<ClientId, CounterState>;
@@ -104,7 +104,7 @@ interface GatewayRequest {
   method: string;
 }
 
-class ApiGateway {
+export class ApiGateway {
   private readonly generalLimiter: FixedWindowRateLimiter;
   private readonly checkoutLimiter: FixedWindowRateLimiter;
 
@@ -155,4 +155,4 @@ function demo(): void {
   }
 }
 
-demo();
+// demo();

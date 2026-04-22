@@ -29,6 +29,25 @@ Typical goals:
 Mental model:
 > one public entry point, many backend instances behind it.
 
+```mermaid
+graph LR
+    Client1[Client A] --> LB((Load Balancer))
+    Client2[Client B] --> LB
+    Client3[Client C] --> LB
+
+    LB -- "Round Robin / Least Conn" --> Srv1[Backend 1]
+    LB --> Srv2[Backend 2]
+    LB --> Srv3[Backend 3]
+
+    subgraph "Target Group / Service Fleet"
+        Srv1
+        Srv2
+        Srv3
+    end
+
+    style LB fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ---
 
 ## 2) Why it matters in system design
@@ -176,6 +195,21 @@ Useful when:
 
 Rule of thumb:
 > prefer stateless services; use stickiness only when really necessary.
+
+```mermaid
+graph TD
+    subgraph "Stateless (Recommended)"
+        C1[Client] --> LB1((LB))
+        LB1 --> S1[Any Server]
+        S1 --> DB[(Shared DB/Cache)]
+    end
+
+    subgraph "Sticky Sessions (Legacy/Special cases)"
+        C2[Client] -- "Cookie: ID=ABC" --> LB2((LB))
+        LB2 -- "Always to" --> S2[Specific Server]
+        S2 --> Local[Local Memory]
+    end
+```
 
 ---
 

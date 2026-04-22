@@ -11,10 +11,10 @@
  * - a real system would need heartbeats, TTL, health checks, retries, and persistence
  */
 
-type ServiceName = string;
-type InstanceId = string;
+export type ServiceName = string;
+export type InstanceId = string;
 
-interface ServiceInstance {
+export interface ServiceInstance {
   id: InstanceId;
   host: string;
   port: number;
@@ -22,7 +22,7 @@ interface ServiceInstance {
   zone?: string;
 }
 
-class ServiceRegistry {
+export class ServiceRegistry {
   private readonly services: Map<ServiceName, Map<InstanceId, ServiceInstance>>;
 
   constructor() {
@@ -164,4 +164,4 @@ function demo(): void {
   }
 }
 
-demo();
+// demo();
