@@ -1,5 +1,8 @@
 ## How this consistent hashing example works
 
+> **Theory reference:** [`Theory/001_first_fundamentals.md`](../../../Theory/001_first_fundamentals.md) — building blocks overview
+> **Also related:** [`Theory/006_Databases_Replication_Sharding.md`](../../../Theory/006_Databases_Replication_Sharding.md) — sharding context
+
 This example shows a simple implementation of **consistent hashing**, a technique often used in distributed systems to assign keys to servers, caches, or storage nodes.
 
 ### The problem it solves

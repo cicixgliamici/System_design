@@ -145,3 +145,32 @@ When asked about rate limiting + retries:
 - return semantics (429 + retry-after)
 - handle failures (fallback strategy)
 - mention idempotency for write endpoints
+
+---
+
+## Implementation
+
+These algorithms are implemented across multiple languages:
+
+### Rate limiting
+
+| Algorithm | Language | Source |
+|---|---|---|
+| Token Bucket | Python | [`code/python/rate_limiter/token_bucket.py`](../code/python/rate_limiter/token_bucket.py) |
+| Fixed Window (at API Gateway) | TypeScript | [`code/typescript/gateway/rate_limit_at_gateway.ts`](../code/typescript/gateway/rate_limit_at_gateway.ts) |
+
+### Retries with backoff + jitter
+
+→ [`code/python/retries/retry_with_jitter_demo.py`](../code/python/retries/retry_with_jitter_demo.py)
+
+### Resilience (Circuit Breaker)
+
+→ [`code/python/resilience/circuit_breaker_demo.py`](../code/python/resilience/circuit_breaker_demo.py)
+
+The Circuit Breaker implements the 3-state FSM described in production resilience literature (CLOSED → OPEN → HALF_OPEN).
+
+Run the tests:
+```bash
+python -m unittest discover code/python   # Python suite
+cd code/typescript && npm test            # TypeScript suite
+```

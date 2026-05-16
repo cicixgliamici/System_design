@@ -1,6 +1,8 @@
 # Round Robin in Go
 
-## Explanation
+> **Theory reference:** [`Theory/005_Load_Balancing.md`](../../../Theory/005_Load_Balancing.md) — load balancing algorithms, health checks, HA
+
+
 
 ### How this round-robin example works
 

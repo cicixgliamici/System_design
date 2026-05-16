@@ -12,18 +12,38 @@ type Job struct {
 	Payload string
 }
 
+// ProcessFunc is a function that processes a single job.
+// Accepting it as a parameter makes the pool testable without side effects.
+type ProcessFunc func(workerID int, job Job)
+
 // WorkerPool manages a set of workers processing jobs from a channel.
 type WorkerPool struct {
 	workerCount int
 	jobs        chan Job
 	wg          sync.WaitGroup
+	processFunc ProcessFunc
 }
 
-// NewWorkerPool creates and starts a worker pool.
+// defaultProcessFunc is the real work function used in production/demo mode.
+// It prints progress and sleeps to simulate variable work cost.
+func defaultProcessFunc(workerID int, job Job) {
+	fmt.Printf("worker=%d processing job=%d payload=%s\n", workerID, job.ID, job.Payload)
+	time.Sleep(50 * time.Millisecond)
+}
+
+// NewWorkerPool creates and starts a worker pool with the default process function.
 func NewWorkerPool(workerCount int, queueCapacity int) *WorkerPool {
+	return NewWorkerPoolWithFunc(workerCount, queueCapacity, defaultProcessFunc)
+}
+
+// NewWorkerPoolWithFunc creates and starts a worker pool with a custom process function.
+// This variant is useful in tests where the caller needs to observe completions
+// without the side effects (I/O, sleep) of the default implementation.
+func NewWorkerPoolWithFunc(workerCount int, queueCapacity int, fn ProcessFunc) *WorkerPool {
 	wp := &WorkerPool{
 		workerCount: workerCount,
 		jobs:        make(chan Job, queueCapacity),
+		processFunc: fn,
 	}
 
 	wp.start()
@@ -36,7 +56,7 @@ func (wp *WorkerPool) start() {
 		go func(workerID int) {
 			defer wp.wg.Done()
 			for job := range wp.jobs {
-				wp.processJob(workerID, job)
+				wp.processFunc(workerID, job)
 			}
 		}(i)
 	}
@@ -53,13 +73,6 @@ func (wp *WorkerPool) Shutdown() {
 	wp.wg.Wait()
 }
 
-func (wp *WorkerPool) processJob(workerID int, job Job) {
-	// Print who is handling the job (educational visibility).
-	fmt.Printf("worker=%d processing job=%d payload=%s\n", workerID, job.ID, job.Payload)
-
-	// Simulate variable work cost.
-	time.Sleep(50 * time.Millisecond)
-}
 
 func main() {
 	const workerCount = 3

@@ -93,3 +93,28 @@ When asked "do we need gateway or mesh?", a strong answer is:
 - gateway first for external APIs
 - mesh when internal service communication and reliability policies become hard to manage manually
 - avoid introducing both too early in a small system
+
+---
+
+## Implementation
+
+Both concepts are demonstrated in TypeScript:
+
+### API Gateway — rate limiting at the edge
+
+→ [`code/typescript/gateway/rate_limit_at_gateway.ts`](../code/typescript/gateway/rate_limit_at_gateway.ts)
+
+Demonstrates:
+- Per-client fixed-window rate limiting
+- Differentiated limits by endpoint (`/checkout` vs general traffic)
+- `429 Too Many Requests` + `Retry-After` semantics
+
+### Service Discovery (core building block of service meshes)
+
+→ [`code/typescript/discovery/simple_registry.ts`](../code/typescript/discovery/simple_registry.ts)
+
+Demonstrates:
+- In-memory service registry (register, deregister, lookup)
+- Baseline for understanding how meshes maintain their routing tables
+
+Run the tests: `cd code/typescript && npm test`

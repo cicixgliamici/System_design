@@ -172,3 +172,27 @@ Copy this block into every new `design.md`:
 ---
 
 For each: Requirements + Numbers + High-level diagram + 3 failure modes.
+
+---
+
+## Implementation
+
+Several building blocks introduced in this chapter are implemented as working code:
+
+### Consistent Hashing (distributed key assignment)
+
+→ [`code/go/hashring/consistent_hashing.go`](../code/go/hashring/consistent_hashing.go)
+→ [`code/go/hashring/consistent_hashing.md`](../code/go/hashring/consistent_hashing.md) — full explanation
+
+Demonstrates how placing both keys and nodes on a hash ring minimises key
+remapping when nodes are added or removed.
+
+### Worker Pool with Backpressure (concurrency + load control)
+
+→ [`code/go/workerpool/worker_pool_with_backpressure.go`](../code/go/workerpool/worker_pool_with_backpressure.go)
+→ [`code/go/workerpool/worker_pool.md`](../code/go/workerpool/worker_pool.md) — design notes
+
+Demonstrates bounded concurrency: a fixed number of goroutines drain a
+buffered channel, applying natural back-pressure to the producer.
+
+Run the tests: `go test ./code/go/...`

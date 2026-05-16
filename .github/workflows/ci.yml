@@ -1,0 +1,177 @@
+# =============================================================================
+# System Design CI Pipeline
+# =============================================================================
+#
+# This pipeline runs on every push and pull request to `main`.
+# It is intentionally split into independent jobs so that:
+#   - test failures in one language do not block linting in another
+#   - the GitHub Actions UI shows per-language status at a glance
+#
+# Job overview:
+#   test-go       — go test ./...
+#   lint-go       — golangci-lint (staticcheck, errcheck, etc.)
+#   test-python   — python -m unittest discover
+#   lint-python   — ruff check (replaces flake8 + isort)
+#   test-ts       — jest via npm test
+#   lint-ts       — eslint (type-aware rules via @typescript-eslint)
+# =============================================================================
+
+name: System Design CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+# Cancel in-progress runs for the same branch when a new commit is pushed.
+# This avoids wasting CI minutes on stale runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ---------------------------------------------------------------------------
+# Go jobs
+# ---------------------------------------------------------------------------
+jobs:
+
+  test-go:
+    name: "Go — Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          # Cache the Go module download cache to speed up subsequent runs.
+          cache: true
+
+      - name: Run tests
+        # -v: verbose output (shows each test name)
+        # -race: enable the race detector (catches goroutine data races)
+        # ./...: run all packages recursively
+        run: go test -v -race ./...
+
+  lint-go:
+    name: "Go — Lint (golangci-lint)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Run golangci-lint
+        # golangci-lint is the standard meta-linter for Go.
+        # It runs many linters in parallel (staticcheck, errcheck, govet,
+        # unused, gofmt, and more) with a single configuration file.
+        #
+        # The official action handles caching and versioning automatically.
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          # Only report new issues introduced by the current PR, not
+          # pre-existing ones in the base branch.
+          only-new-issues: true
+
+# ---------------------------------------------------------------------------
+# Python jobs
+# ---------------------------------------------------------------------------
+
+  test-python:
+    name: "Python — Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run tests
+        working-directory: ./code/python
+        # -m unittest discover: scan for test*.py files and run them
+        # -v: verbose output
+        run: python -m unittest discover -v
+
+  lint-python:
+    name: "Python — Lint (ruff)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        # requirements-dev.txt contains only ruff.
+        # We don't install it globally to keep the environment clean.
+        run: pip install -r code/python/requirements-dev.txt
+
+      - name: Run ruff
+        working-directory: ./code/python
+        # ruff check: run the linter (equivalent to flake8 + isort + pyupgrade)
+        # ruff format --check: verify formatting without modifying files
+        #   (--check returns exit code 1 if any file would be reformatted)
+        run: |
+          ruff check .
+          ruff format --check .
+
+# ---------------------------------------------------------------------------
+# TypeScript jobs
+# ---------------------------------------------------------------------------
+
+  test-ts:
+    name: "TypeScript — Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          # Cache npm dependencies using package-lock.json as the cache key.
+          cache: "npm"
+          cache-dependency-path: code/typescript/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./code/typescript
+        # npm ci: clean install using the exact versions in package-lock.json.
+        # Faster and more deterministic than npm install in CI.
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ./code/typescript
+        run: npm test
+
+  lint-ts:
+    name: "TypeScript — Lint (eslint)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: code/typescript/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./code/typescript
+        run: npm ci
+
+      - name: Run eslint
+        working-directory: ./code/typescript
+        # eslint is run as an npm script (defined in package.json).
+        # This ensures the same command works locally and in CI.
+        run: npm run lint

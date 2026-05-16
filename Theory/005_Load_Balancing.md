@@ -299,3 +299,19 @@ When proposing a load balancer, mention:
 - Autoscaling interaction:
 - Failure handling:
 - HA notes:
+
+---
+
+## Implementation
+
+The round-robin algorithm described in Section 4 is implemented in Go:
+
+→ [`code/go/loadbalancer/round_robin.go`](../code/go/loadbalancer/round_robin.go)
+→ [`code/go/loadbalancer/round_robin.md`](../code/go/loadbalancer/round_robin.md) — how the implementation works
+
+Key aspects demonstrated:
+- Thread-safe backend selection via `sync.Mutex`
+- Wrap-around using modulo on the index
+- Constructor guard against empty backend lists
+
+Run the tests: `go test ./code/go/loadbalancer/...`

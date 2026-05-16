@@ -1,0 +1,24 @@
+# Development dependencies for the Python layer of System_design.
+#
+# These packages are NOT required to run the source code — they are used
+# only for linting, formatting, and static analysis during development
+# and in CI.
+#
+# Install with:
+#   pip install -r code/python/requirements-dev.txt
+#
+# ---------------------------------------------------------------------------
+# ruff — A fast Python linter and formatter written in Rust.
+#
+# It replaces flake8, isort, pyupgrade, and (optionally) black with a single
+# tool. The default rule set checks for common errors, style issues, and
+# anti-patterns without being overly strict.
+#
+# Why ruff instead of flake8?
+#   - 10-100× faster (important in CI for large repos)
+#   - Zero configuration needed for sensible defaults
+#   - Single binary, no plugins to manage
+#
+# See: https://docs.astral.sh/ruff/
+# ---------------------------------------------------------------------------
+ruff>=0.4.0

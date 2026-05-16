@@ -1,0 +1,117 @@
+{
+  // TypeScript compiler configuration for the system-design TypeScript layer.
+  //
+  // Why a tsconfig.json?
+  // --------------------
+  // Without an explicit tsconfig.json, ts-jest (our test runner) and the
+  // TypeScript compiler fall back to defaults that are often too permissive.
+  // An explicit configuration:
+  //   1. Makes the compiler behavior reproducible across machines and CI.
+  //   2. Enables stricter type checking that catches more bugs at compile time.
+  //   3. Documents the intended target environment for future contributors.
+  //
+  // Key choices explained below.
+
+  "compilerOptions": {
+
+    // -----------------------------------------------------------------------
+    // Output target
+    // -----------------------------------------------------------------------
+
+    // target: which JavaScript version the compiler emits.
+    // ES2020 supports async/await, optional chaining, nullish coalescing, and
+    // BigInt natively — a good baseline for Node.js 14+.
+    "target": "ES2020",
+
+    // module: which module system the compiler uses for imports/exports.
+    // "commonjs" is what Node.js uses natively and what Jest expects.
+    "module": "commonjs",
+
+    // lib: built-in type declarations to include.
+    // ES2020 gives access to modern APIs (Promise, Map, Set, Symbol, etc.)
+    // without pulling in browser-specific globals (window, document).
+    "lib": ["ES2020"],
+
+    // -----------------------------------------------------------------------
+    // Strict type checking
+    // -----------------------------------------------------------------------
+
+    // strict: enables a collection of stricter compiler checks all at once.
+    // This includes:
+    //   - strictNullChecks:        null and undefined are not assignable to
+    //                              other types; you must handle them explicitly.
+    //   - strictFunctionTypes:     more correct type checking for function
+    //                              parameters (contravariance).
+    //   - noImplicitAny:           variables must have an explicit type or a
+    //                              type that can be inferred; "any" is disallowed
+    //                              unless written explicitly.
+    //   - strictPropertyInitialization: class properties must be assigned in
+    //                              the constructor (prevents undefined surprises).
+    //
+    // For an educational repo, strict mode is especially valuable because it
+    // forces explicit type annotations, making the code easier to read and
+    // understand for someone learning the patterns.
+    "strict": true,
+
+    // -----------------------------------------------------------------------
+    // Module resolution
+    // -----------------------------------------------------------------------
+
+    // esModuleInterop: allows importing CommonJS modules with default imports.
+    // Without this, you'd need: import * as X from 'x' instead of import X from 'x'.
+    "esModuleInterop": true,
+
+    // forceConsistentCasingInFileNames: prevents subtle bugs on case-insensitive
+    // file systems (macOS, Windows) that wouldn't appear on Linux CI.
+    "forceConsistentCasingInFileNames": true,
+
+    // -----------------------------------------------------------------------
+    // Output
+    // -----------------------------------------------------------------------
+
+    // outDir: where compiled .js files go.
+    // We compile to ./dist to keep generated files out of the source tree.
+    "outDir": "./dist",
+
+    // rootDir: the root of the TypeScript source tree.
+    // Setting this prevents the compiler from accidentally including files
+    // outside the intended source boundary.
+    "rootDir": ".",
+
+    // sourceMap: generate .map files alongside .js output.
+    // Source maps let debuggers and error stacktraces point to the original
+    // .ts files rather than the compiled .js files.
+    "sourceMap": true,
+
+    // declaration: emit .d.ts type declaration files alongside .js.
+    // Useful if this code were published as a library, and good practice
+    // for understanding how TypeScript's type system works.
+    "declaration": true,
+
+    // -----------------------------------------------------------------------
+    // Additional checks
+    // -----------------------------------------------------------------------
+
+    // noUnusedLocals: error if a local variable is declared but never used.
+    // This catches typos and dead code early.
+    "noUnusedLocals": true,
+
+    // noUnusedParameters: error if a function parameter is declared but never
+    // used. Use a leading underscore (e.g., _unused) to suppress intentionally.
+    "noUnusedParameters": true,
+
+    // noImplicitReturns: every code path in a function that returns a value
+    // must have an explicit return statement. Prevents accidental undefined.
+    "noImplicitReturns": true,
+
+    // noFallthroughCasesInSwitch: a switch case without a break or return is
+    // an error. Prevents accidental fallthrough bugs.
+    "noFallthroughCasesInSwitch": true
+  },
+
+  // include: only compile files under the current directory.
+  "include": ["./**/*.ts"],
+
+  // exclude: skip node_modules and compiled output.
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+}

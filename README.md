@@ -1,97 +1,92 @@
 # System Design
 
-An educational repository about system design fundamentals, distributed systems reasoning, architectural patterns, and compact case studies.
+[![CI](https://github.com/cicixgliamici/System_design/actions/workflows/ci.yml/badge.svg)](https://github.com/cicixgliamici/System_design/actions/workflows/ci.yml)
 
-The repository is meant to help build a structured understanding of how to reason about systems in terms of:
-- scale,
-- reliability,
-- performance,
-- trade-offs,
-- and communication clarity.
+An educational repository about system design fundamentals, distributed systems reasoning, architectural patterns, and hands-on implementations.
+
+The goal is to bridge theory and practice: every concept documented in the `Theory/` layer has a corresponding working implementation in the `code/` layer, with tests.
 
 ---
 
-## Why this repository matters
+## Quick navigation
 
-System design is often learned in a fragmented way through interview prompts or isolated diagrams.
+| Section | Description | Link |
+|---|---|---|
+| 📖 Theory | Core system design concepts | [`Theory/`](./Theory/README.md) |
+| 💻 Code | Working implementations with tests | [`code/`](./code/README.md) |
+| 🏗️ Case Studies | Structured design walkthroughs | [`Case_Studies/`](./Case_Studies/) |
+| 📝 Exercises | Q&A prompts with suggested solutions | [`Exercises/`](./Exercises/) |
 
-This repository is designed as a structured study space where ideas can be organized into:
-- foundational concepts,
-- recurring design patterns,
-- reusable reasoning templates,
-- and worked examples.
+---
 
-Its value lies in making system design more **explicit, modular, and reviewable**.
+## Implemented modules
+
+### Go
+
+| Module | Concept | Source | Tests | Doc |
+|---|---|---|---|---|
+| `hashring` | Consistent Hashing | [consistent_hashing.go](./code/go/hashring/consistent_hashing.go) | ✅ | [.md](./code/go/hashring/consistent_hashing.md) |
+| `loadbalancer` | Round-Robin Load Balancing | [round_robin.go](./code/go/loadbalancer/round_robin.go) | ✅ | [.md](./code/go/loadbalancer/round_robin.md) |
+| `workerpool` | Worker Pool with Backpressure | [worker_pool_with_backpressure.go](./code/go/workerpool/worker_pool_with_backpressure.go) | ✅ | [.md](./code/go/workerpool/worker_pool.md) |
+
+### Python
+
+| Module | Concept | Source | Tests | Doc |
+|---|---|---|---|---|
+| `cache` | Cache-Aside Pattern (TTL) | [cache_aside_demo.py](./code/python/cache/cache_aside_demo.py) | ✅ | [.md](./code/python/cache/cache_aside_demo.md) |
+| `rate_limiter` | Token Bucket | [token_bucket.py](./code/python/rate_limiter/token_bucket.py) | ✅ | — |
+| `resilience` | Circuit Breaker (3-state FSM) | [circuit_breaker_demo.py](./code/python/resilience/circuit_breaker_demo.py) | ✅ | — |
+| `retries` | Retry with Exponential Backoff + Jitter | [retry_with_jitter_demo.py](./code/python/retries/retry_with_jitter_demo.py) | ✅ | — |
+
+### TypeScript
+
+| Module | Concept | Source | Tests | Doc |
+|---|---|---|---|---|
+| `gateway` | Fixed-Window Rate Limiter at API Gateway | [rate_limit_at_gateway.ts](./code/typescript/gateway/rate_limit_at_gateway.ts) | ✅ | — |
+| `discovery` | In-Memory Service Registry | [simple_registry.ts](./code/typescript/discovery/simple_registry.ts) | ✅ | — |
+
+---
+
+## Theory coverage
+
+| File | Topic |
+|---|---|
+| [000](./Theory/000_what_is_system_design_and_goal.md) | What is System Design and the goal of this repo |
+| [001](./Theory/001_first_fundamentals.md) | First fundamentals: requirements, scaling, building blocks |
+| [002](./Theory/002_rate_limiting_retries_idempotency.md) | Rate Limiting, Retries, Idempotency |
+| [003](./Theory/003_Caching.md) | Caching: patterns, invalidation, stampede |
+| [004](./Theory/004_Messaging.md) | Messaging: queues, pub-sub, delivery guarantees |
+| [005](./Theory/005_Load_Balancing.md) | Load Balancing: algorithms, health checks, HA |
+| [006](./Theory/006_Databases_Replication_Sharding.md) | Databases: replication, sharding |
+| [007](./Theory/007_Consistency_CAP_and_Quorums.md) | Consistency, CAP theorem, Quorums |
+| [008](./Theory/008_Observability_and_SLOs.md) | Observability and SLOs |
+| [009](./Theory/009_API_Gateway_vs_Service_Mesh.md) | API Gateway vs Service Mesh |
+| [010](./Theory/010_Search_and_Inverted_Index_Basics.md) | Search and Inverted Index Basics |
+| [011](./Theory/011_Consensus_and_Leader_Election.md) | Consensus and Leader Election |
+| [012](./Theory/012_Data_Modeling_for_High_Scale.md) | Data Modeling for High Scale |
+
+---
+
+## Running tests
+
+```bash
+# Run all tests (Go + Python + TypeScript)
+make test-all
+
+# Per-language
+make test-go
+make test-python
+make test-ts
+```
 
 ---
 
 ## Repository goals
 
-The main goals of this repository are:
-- build a strong conceptual foundation in distributed systems and system design
-- organize recurring architectural patterns in a reusable way
-- practice design reasoning through small case studies and exercises
-- create a personal knowledge base that can support interviews and technical discussions
-
----
-
-## Repository structure
-
-The repository is organized around a few core categories:
-
-- **Fundamentals** — core distributed systems concepts and vocabulary
-- **Architectural patterns** — recurring building blocks and trade-offs
-- **Case studies** — structured design walkthroughs
-- **Exercises** — prompts and solution outlines
-- **Glossary** — compact reference material
-
-As the repository evolves, these sections can become more detailed and more interconnected.
-
----
-
-## How to read this repository
-
-A good way to use this repository is:
-
-1. Start from the fundamentals.
-2. Study one architectural pattern at a time.
-3. Move to compact case studies.
-4. Practice with exercises and compare alternative trade-offs.
-
-The repository is meant to support active reasoning, not just passive reading.
-
----
-
-## Positioning
-
-This project should be read as a **growing educational repository** rather than as a finished handbook.
-
-Its purpose is to document and structure system-design knowledge progressively, with an emphasis on:
-- conceptual clarity,
-- explicit trade-offs,
-- and reusable reasoning patterns.
-
----
-
-## Future directions
-
-Possible future extensions include:
-- deeper case studies
-- templates for common interview-style systems
-- notes on reliability and observability patterns
-- sections on caching, queues, storage, consistency, and scaling
-- more diagrams and worked design trade-offs
-
-These are future directions, not claims that the repository already covers everything in depth.
-
----
-
-## Typical use cases
-
-- interview preparation
-- revision of distributed systems concepts
-- organizing design templates and trade-offs
-- building a structured technical study repository
+- Build a strong conceptual foundation in distributed systems
+- Implement each key pattern in working, tested code
+- Connect theory to practice through explicit cross-links
+- Practice design reasoning through case studies and exercises
 
 ---
 

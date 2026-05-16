@@ -340,3 +340,19 @@ When you propose caching, cover:
 * Stampede mitigation:
 * Failure policy:
 * Consistency notes:
+
+---
+
+## Implementation
+
+The **Cache-Aside** pattern described in Section 4A is implemented in Python:
+
+→ [`code/python/cache/cache_aside_demo.py`](../code/python/cache/cache_aside_demo.py)
+→ [`code/python/cache/cache_aside_demo.md`](../code/python/cache/cache_aside_demo.md) — walkthrough
+
+Key aspects demonstrated:
+- TTL-based expiry on every cached entry
+- Miss → DB read → cache populate flow
+- Clock injection for deterministic testing (no `time.sleep` in tests)
+
+Run the tests: `python -m unittest discover code/python`
