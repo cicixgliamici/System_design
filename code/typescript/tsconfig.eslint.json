@@ -1,0 +1,40 @@
+{
+  // tsconfig.eslint.json — used ONLY by ESLint for type-aware linting.
+  //
+  // Why a separate tsconfig for ESLint?
+  // ------------------------------------
+  // The main tsconfig.json excludes **/*.spec.ts from compilation because
+  // test files should not be emitted to dist/. However, ESLint's type-aware
+  // rules (recommended-requiring-type-checking) need the TypeScript compiler
+  // to build a type program that includes ALL files ESLint will analyse,
+  // including spec files. When ESLint tries to lint a file that is not in
+  // the tsconfig project it errors with:
+  //
+  //   "ESLint was configured to run on <file> but that TSConfig does not
+  //    include this file"
+  //
+  // The solution is to provide ESLint with its own tsconfig that includes
+  // spec files. This tsconfig is NOT used by tsc for building — only by
+  // ESLint (via parserOptions.project in .eslintrc.js).
+  //
+  // The key difference vs tsconfig.json:
+  //   - include: adds **/*.spec.ts
+  //   - noEmit: true (we never want to emit from this config)
+  //   - declaration / sourceMap: false (not needed for linting)
+
+  "extends": "./tsconfig.json",
+
+  "compilerOptions": {
+    // Override output-related options: ESLint doesn't need any output.
+    "noEmit": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "./dist-eslint-scratch"
+  },
+
+  // Include everything: source files AND spec files.
+  "include": ["./**/*.ts"],
+
+  // Only exclude node_modules and dist; spec files are intentionally included.
+  "exclude": ["node_modules", "dist", "dist-eslint-scratch"]
+}

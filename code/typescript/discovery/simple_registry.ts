@@ -111,7 +111,7 @@ export class ServiceRegistry {
   }
 }
 
-function demo(): void {
+function _demo(): void {
   const registry = new ServiceRegistry();
   const rrCounter = { value: 0 };
 

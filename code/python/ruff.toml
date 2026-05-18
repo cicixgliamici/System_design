@@ -1,0 +1,23 @@
+# ruff.toml — ruff configuration for the Python layer of System_design.
+#
+# Documentation: https://docs.astral.sh/ruff/configuration/
+
+line-length = 88
+
+[lint]
+# Keep the default rule set (E + F only): pycodestyle errors and pyflakes.
+# We intentionally do NOT add I (isort) or UP (pyupgrade) here because the
+# existing codebase was not written to satisfy those rules and fixing them
+# would be noisy churn. Add them in a dedicated cleanup commit if desired.
+select = ["E", "F"]
+
+[format]
+# Force LF line endings regardless of the host OS.
+#
+# Why: this repo is developed on Windows (CRLF) but CI runs on Linux (LF).
+# Without this, ruff on Windows writes CRLF; ruff on Linux CI then sees the
+# files as needing reformatting and exits with code 1.
+line-ending = "lf"
+
+quote-style = "double"
+indent-style = "space"

@@ -137,7 +137,7 @@ export class ApiGateway {
   }
 }
 
-function demo(): void {
+function _demo(): void {
   const gateway = new ApiGateway();
 
   const requests: GatewayRequest[] = [
@@ -155,4 +155,4 @@ function demo(): void {
   }
 }
 
-// demo();
+// _demo();

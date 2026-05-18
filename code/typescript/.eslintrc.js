@@ -44,10 +44,12 @@ module.exports = {
     // sourceType: "module" enables ES module syntax (import/export).
     sourceType: "module",
 
-    // project: points to the tsconfig.json.
-    // Required for type-aware ESLint rules that need type information.
-    // Without this, rules like @typescript-eslint/no-floating-promises cannot work.
-    project: "./tsconfig.json",
+    // project: points to the tsconfig used for type-aware ESLint rules.
+    // We use tsconfig.eslint.json (not tsconfig.json) because the main
+    // tsconfig excludes *.spec.ts files (they should not be emitted to dist).
+    // ESLint needs a project that includes spec files too, otherwise it errors:
+    // "ESLint was configured to run on <spec.ts> but tsconfig does not include this file"
+    project: "./tsconfig.eslint.json",
   },
 
   // plugins: registers the @typescript-eslint plugin so its rules are available.

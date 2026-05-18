@@ -1,0 +1,28 @@
+# .gitattributes
+# ---------------
+# Normalises line endings to LF for all text files when checked out on any OS.
+# This prevents ruff (and other Unix tools running in CI on Linux) from seeing
+# CRLF line endings and flagging files as needing reformatting.
+#
+# How it works:
+#   text=auto  — Git decides if a file is text and normalises on commit.
+#   eol=lf     — Forces LF line endings on checkout for the matched patterns.
+#
+# Windows developers: Git will convert CRLF → LF on commit and LF → CRLF on
+# checkout only if core.autocrlf is set. With eol=lf here, checkouts always
+# produce LF, so editors and tools see consistent line endings.
+
+# Default for all text files
+* text=auto eol=lf
+
+# Explicitly mark binary files to prevent any conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.wasm binary
