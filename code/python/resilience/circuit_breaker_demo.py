@@ -246,6 +246,7 @@ class CircuitBreaker:
 # Demo (run as: python -m resilience.circuit_breaker_demo)
 # ---------------------------------------------------------------------------
 
+
 def flaky_dependency() -> str:
     """
     Simulates an unreliable downstream service.

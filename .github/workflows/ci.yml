@@ -145,9 +145,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./code/typescript
-        # npm ci: clean install using the exact versions in package-lock.json.
-        # Faster and more deterministic than npm install in CI.
-        run: npm ci
+        # Using npm install instead of npm ci because package-lock.json is not
+        # yet committed to the repository. npm ci requires an existing lock file.
+        # To switch back to npm ci (recommended for reproducibility), run
+        # `npm install` locally, commit package-lock.json, and restore npm ci here.
+        run: npm install
 
       - name: Run tests
         working-directory: ./code/typescript
@@ -167,7 +169,8 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./code/typescript
-        run: npm ci
+        # npm install used here for the same reason as test-ts (no lock file committed).
+        run: npm install
 
       - name: Run eslint
         working-directory: ./code/typescript

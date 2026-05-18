@@ -92,7 +92,7 @@ class TokenBucket:
     """
 
     capacity: float
-    refill_rate: float       # tokens per second
+    refill_rate: float  # tokens per second
     tokens: float
     last_refill_time: float
     clock: Clock
@@ -216,6 +216,7 @@ class TokenBucket:
 # ---------------------------------------------------------------------------
 # Demo (run as: python -m rate_limiter.token_bucket)
 # ---------------------------------------------------------------------------
+
 
 def demo() -> None:
     """

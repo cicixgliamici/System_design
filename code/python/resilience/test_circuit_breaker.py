@@ -52,6 +52,7 @@ from .circuit_breaker_demo import CircuitBreaker, State
 # Helper: a simple mutable clock for tests
 # ---------------------------------------------------------------------------
 
+
 class FakeClock:
     """
     A controllable time source for testing.
@@ -82,6 +83,7 @@ class FakeClock:
 # Helper: build a CircuitBreaker in OPEN state without repeating setup code
 # ---------------------------------------------------------------------------
 
+
 def _make_open_breaker(
     clock: FakeClock,
     failure_threshold: int = 3,
@@ -105,6 +107,7 @@ def _make_open_breaker(
 # ---------------------------------------------------------------------------
 # Test cases
 # ---------------------------------------------------------------------------
+
 
 class TestCircuitBreakerFSM(unittest.TestCase):
     """Tests that verify each state transition of the circuit breaker FSM."""
@@ -304,15 +307,15 @@ class TestCircuitBreakerFSM(unittest.TestCase):
         clock = FakeClock(start=0.0)
         cb = _make_open_breaker(clock, recovery_timeout_seconds=5.0)
 
-        clock.advance(6.0)     # first timeout elapses
-        cb.before_call()       # HALF_OPEN
-        cb.record_failure()    # probe fails → OPEN again, timer reset to t=6
+        clock.advance(6.0)  # first timeout elapses
+        cb.before_call()  # HALF_OPEN
+        cb.record_failure()  # probe fails → OPEN again, timer reset to t=6
 
-        clock.advance(4.0)     # now at t=10, only 4s since re-open
+        clock.advance(4.0)  # now at t=10, only 4s since re-open
         self.assertFalse(cb.before_call())  # still OPEN
 
-        clock.advance(2.0)     # now at t=12, 6s since re-open
-        self.assertTrue(cb.before_call())   # HALF_OPEN again
+        clock.advance(2.0)  # now at t=12, 6s since re-open
+        self.assertTrue(cb.before_call())  # HALF_OPEN again
 
 
 if __name__ == "__main__":

@@ -55,14 +55,15 @@ class FakeClock:
 
 
 class TestTokenBucket(unittest.TestCase):
-
     def _bucket(self, capacity: int = 5, refill_rate: float = 1.0) -> tuple:
         """
         Helper: create a TokenBucket with a FakeClock starting at t=0.
         Returns (bucket, clock) so tests can advance time freely.
         """
         clock = FakeClock(start=0.0)
-        bucket = TokenBucket.create(capacity=capacity, refill_rate=refill_rate, clock=clock.now)
+        bucket = TokenBucket.create(
+            capacity=capacity, refill_rate=refill_rate, clock=clock.now
+        )
         return bucket, clock
 
     # ------------------------------------------------------------------
@@ -81,7 +82,9 @@ class TestTokenBucket(unittest.TestCase):
         """
         bucket, _ = self._bucket(capacity=5, refill_rate=1.0)
         for _ in range(5):
-            self.assertTrue(bucket.allow(), "Expected request to be allowed during initial burst")
+            self.assertTrue(
+                bucket.allow(), "Expected request to be allowed during initial burst"
+            )
 
     def test_sixth_request_rejected(self):
         """
@@ -93,7 +96,9 @@ class TestTokenBucket(unittest.TestCase):
         bucket, _ = self._bucket(capacity=5)
         for _ in range(5):
             bucket.allow()
-        self.assertFalse(bucket.allow(), "6th request should be rejected (bucket empty)")
+        self.assertFalse(
+            bucket.allow(), "6th request should be rejected (bucket empty)"
+        )
 
     # ------------------------------------------------------------------
     # Refill behaviour
@@ -117,8 +122,8 @@ class TestTokenBucket(unittest.TestCase):
 
         clock.advance(2.5)
 
-        self.assertTrue(bucket.allow())   # 1.5 tokens remaining
-        self.assertTrue(bucket.allow())   # 0.5 tokens remaining
+        self.assertTrue(bucket.allow())  # 1.5 tokens remaining
+        self.assertTrue(bucket.allow())  # 0.5 tokens remaining
         self.assertFalse(bucket.allow())  # not enough for 1.0
 
     def test_tokens_capped_at_capacity(self):
@@ -132,7 +137,9 @@ class TestTokenBucket(unittest.TestCase):
         """
         bucket, clock = self._bucket(capacity=5, refill_rate=1.0)
 
-        clock.advance(100.0)  # 100 seconds of idle time → would be 100 tokens without cap
+        clock.advance(
+            100.0
+        )  # 100 seconds of idle time → would be 100 tokens without cap
 
         snapshot = bucket.snapshot()
         self.assertEqual(snapshot["tokens"], 5.0, "Tokens must be capped at capacity")
@@ -196,7 +203,7 @@ class TestTokenBucket(unittest.TestCase):
         """
         bucket, _ = self._bucket(capacity=5)
 
-        self.assertTrue(bucket.allow(cost=3.0))   # 2 tokens remaining
+        self.assertTrue(bucket.allow(cost=3.0))  # 2 tokens remaining
         self.assertFalse(bucket.allow(cost=3.0))  # 2 < 3 → rejected
 
     def test_invalid_cost_raises_value_error(self):
