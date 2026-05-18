@@ -60,5 +60,6 @@ coverage/
 *.spec.js.map
 *.spec.d.ts
 
-# Project specific
-# Add any specific temporary files here
+# Project specific — local-only docs (not pushed)
+PROGRESS.md
+ROADMAP.md

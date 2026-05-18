@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from .retry_with_jitter_demo import RetryConfig, compute_backoff_with_jitter, call_with_retry
 
 class TestRetryPolicy(unittest.TestCase):

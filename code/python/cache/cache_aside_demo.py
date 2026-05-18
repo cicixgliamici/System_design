@@ -106,4 +106,18 @@ def read_with_cache_aside(
 # Expected sequence:
 # - first read: cache miss -> database read -> cache fill
 # - second read: cache hit
+def demo() -> None:
+    db = FakeDatabase(data={"user:1": "Alice", "user:2": "Bob"})
+    cache = InMemoryCache()
+
+    print("\n--- First read (expect cache miss) ---")
+    value = read_with_cache_aside(cache, db, "user:1")
+    print(f"Result: {value}")
+
+    print("\n--- Second read (expect cache hit) ---")
+    value = read_with_cache_aside(cache, db, "user:1")
+    print(f"Result: {value}")
+
+
+if __name__ == "__main__":
     demo()

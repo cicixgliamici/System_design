@@ -35,7 +35,7 @@ The goal is to bridge theory and practice: every concept documented in the `Theo
 |---|---|---|---|---|
 | `cache` | Cache-Aside Pattern (TTL) | [cache_aside_demo.py](./code/python/cache/cache_aside_demo.py) | ✅ | [.md](./code/python/cache/cache_aside_demo.md) |
 | `rate_limiter` | Token Bucket | [token_bucket.py](./code/python/rate_limiter/token_bucket.py) | ✅ | — |
-| `resilience` | Circuit Breaker (3-state FSM) | [circuit_breaker_demo.py](./code/python/resilience/circuit_breaker_demo.py) | ✅ | — |
+| `resilience` | Circuit Breaker (3-state FSM) | [circuit_breaker_demo.py](./code/python/resilience/circuit_breaker_demo.py) | ✅ | [.md](./code/python/resilience/circuit_breaker_demo.md) |
 | `retries` | Retry with Exponential Backoff + Jitter | [retry_with_jitter_demo.py](./code/python/retries/retry_with_jitter_demo.py) | ✅ | — |
 
 ### TypeScript
