@@ -139,17 +139,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          # npm caching is disabled until package-lock.json is committed.
-          # Re-enable with cache: "npm" + cache-dependency-path once the
-          # lock file exists in code/typescript/package-lock.json.
+          cache: 'npm'
+          cache-dependency-path: './code/typescript/package-lock.json'
 
       - name: Install dependencies
         working-directory: ./code/typescript
-        # Using npm install instead of npm ci because package-lock.json is not
-        # yet committed to the repository. npm ci requires an existing lock file.
-        # To switch back to npm ci (recommended for reproducibility), run
-        # `npm install` locally, commit package-lock.json, and restore npm ci here.
-        run: npm install
+        # Using npm ci for reproducible builds.
+        run: npm ci
 
       - name: Run tests
         working-directory: ./code/typescript
@@ -165,12 +161,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          # npm caching disabled until package-lock.json is committed.
+          cache: 'npm'
+          cache-dependency-path: './code/typescript/package-lock.json'
 
       - name: Install dependencies
         working-directory: ./code/typescript
-        # npm install used here for the same reason as test-ts (no lock file committed).
-        run: npm install
+        run: npm ci
 
       - name: Run eslint
         working-directory: ./code/typescript

@@ -34,16 +34,16 @@ The goal is to bridge theory and practice: every concept documented in the `Theo
 | Module | Concept | Source | Tests | Doc |
 |---|---|---|---|---|
 | `cache` | Cache-Aside Pattern (TTL) | [cache_aside_demo.py](./code/python/cache/cache_aside_demo.py) | ✅ | [.md](./code/python/cache/cache_aside_demo.md) |
-| `rate_limiter` | Token Bucket | [token_bucket.py](./code/python/rate_limiter/token_bucket.py) | ✅ | — |
+| `rate_limiter` | Token Bucket | [token_bucket.py](./code/python/rate_limiter/token_bucket.py) | ✅ | [.md](./code/python/rate_limiter/token_bucket.md) |
 | `resilience` | Circuit Breaker (3-state FSM) | [circuit_breaker_demo.py](./code/python/resilience/circuit_breaker_demo.py) | ✅ | [.md](./code/python/resilience/circuit_breaker_demo.md) |
-| `retries` | Retry with Exponential Backoff + Jitter | [retry_with_jitter_demo.py](./code/python/retries/retry_with_jitter_demo.py) | ✅ | — |
+| `retries` | Retry with Exponential Backoff + Jitter | [retry_with_jitter_demo.py](./code/python/retries/retry_with_jitter_demo.py) | ✅ | [.md](./code/python/retries/retry_with_jitter_demo.md) |
 
 ### TypeScript
 
 | Module | Concept | Source | Tests | Doc |
 |---|---|---|---|---|
-| `gateway` | Fixed-Window Rate Limiter at API Gateway | [rate_limit_at_gateway.ts](./code/typescript/gateway/rate_limit_at_gateway.ts) | ✅ | — |
-| `discovery` | In-Memory Service Registry | [simple_registry.ts](./code/typescript/discovery/simple_registry.ts) | ✅ | — |
+| `gateway` | Fixed-Window Rate Limiter at API Gateway | [rate_limit_at_gateway.ts](./code/typescript/gateway/rate_limit_at_gateway.ts) | ✅ | [.md](./code/typescript/gateway/rate_limit_at_gateway.md) |
+| `discovery` | In-Memory Service Registry | [simple_registry.ts](./code/typescript/discovery/simple_registry.ts) | ✅ | [.md](./code/typescript/discovery/simple_registry.md) |
 
 ---
 
